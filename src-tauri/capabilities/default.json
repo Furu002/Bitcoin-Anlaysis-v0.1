@@ -1,0 +1,6 @@
+{
+  "identifier": "main-capability",
+  "description": "Local analysis window only",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

@@ -4,3 +4,8 @@ dist/
 .signal/
 *.sqlite3*
 *.log
+src-tauri/icons/android/
+src-tauri/icons/ios/
+src-tauri/icons/Square*.png
+src-tauri/icons/StoreLogo.png
+src-tauri/gen/
