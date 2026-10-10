@@ -102,6 +102,7 @@ impl Engine {
         self.transport = "syncing".into();
         self.note = reason;
         self.gaps += 1;
+        self.cvd_complete = false;
     }
 
     pub fn apply(&mut self, frame: &Envelope) -> Result<(), String> {
@@ -159,7 +160,9 @@ impl Engine {
             }
             Event::Trade(t) => {
                 if t.price.0 <= 0 || t.qty.0 <= 0 {
-                    return Err("Invalid trade price or quantity".into());
+                    let reason = "Invalid trade price or quantity".to_string();
+                    self.invalidate(reason.clone());
+                    return Err(reason);
                 }
                 if self.last_trade_id.is_some_and(|id| t.id <= id) {
                     self.trade_duplicates += 1;
@@ -365,6 +368,8 @@ mod tests {
         assert!(v.imbalance.is_none());
         assert!(e.apply(&trade(2, 0, false)).is_err());
         assert_eq!(e.trade_count, 1);
+        assert!(!e.cvd_complete);
+        assert_eq!(e.gaps, 1);
     }
     #[test]
     fn delayed_snapshot_and_duplicate_depth_cannot_hide_staleness() {
